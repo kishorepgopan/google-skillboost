@@ -1,4 +1,37 @@
-Solution 2# Build a Multi-Modal GenAI Application Challenge Lab
+Solution 1 # Build a Multi-Modal GenAI Application Challenge Lab
+
+```
+import vertexai
+from vertexai.preview.vision_models import ImageGenerationModel
+
+def generate_bouquet_image(prompt: str):
+    """Generates an image using the imagen-3.0-generate-002 model and saves it locally."""
+
+    # Initialize Vertex AI with the lab details
+    vertexai.init(project="YOUR_PROJECT_ID", location="YOUR_LAB_LOCATION")
+
+    # Load the model "imagen-3.0-generate-002"
+    model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")
+
+    # Generate image using the prompt
+    images = model.generate_images(
+        prompt=prompt,
+        number_of_images=1,
+        seed=1,
+        add_watermark=False
+    )
+
+    # The image is saved in local with the name bouquet.jpeg
+    with open("bouquet.jpeg", "wb") as f:
+        f.write(images[0]._image_bytes)
+
+    print("Saved bouquet.jpeg from the prompt")
+
+# Call the function with the required prompt
+generate_bouquet_image("Create an image containing a bouquet of 2 sunflowers and 3 roses")
+```
+
+Solution 2 # Build a Multi-Modal GenAI Application Challenge Lab
 
 ```
 import vertexai
@@ -18,7 +51,7 @@ def analyze_bouquet_image(project_id: str, location: str) -> None:
     # Note: the stream=True flag is passed as a keyword argument after the input list.
     stream_response = multimodal_model.generate_content(
         [
-            Part.from_image(Image.load_from_file("image.jpeg")),
+            Part.from_image(Image.load_from_file("bouquet.jpeg")),
             "Generate birthday wishes based on this image?"
         ],
         stream=True
